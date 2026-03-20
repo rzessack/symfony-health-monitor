@@ -1,0 +1,31 @@
+{
+    "name": "rzessack/symfony-health-monitor",
+    "description": "System health monitoring bundle for Symfony — CPU, RAM, Disk, Load, DB, Redis with historical snapshots and Chart.js dashboard",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Robert Zessack",
+            "email": "mail@zerocom.gmbh"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "symfony/framework-bundle": "^7.0 || ^8.0",
+        "doctrine/orm": "^3.0",
+        "doctrine/doctrine-bundle": "^2.10",
+        "symfony/console": "^7.0 || ^8.0",
+        "symfony/mailer": "^7.0 || ^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rzessack\\HealthMonitor\\": "src/"
+        }
+    },
+    "extra": {
+        "symfony": {
+            "recipes": false
+        }
+    },
+    "minimum-stability": "stable"
+}

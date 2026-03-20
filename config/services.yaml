@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Rzessack\HealthMonitor\Service\ProcReader: ~
+
+    Rzessack\HealthMonitor\Service\SystemHealthService:
+        arguments:
+            $redisUrl: '%env(string:REDIS_URL)%'
+
+    Rzessack\HealthMonitor\Repository\SystemHealthSnapshotRepository: ~
+
+    Rzessack\HealthMonitor\Command\CollectHealthSnapshotCommand:
+        tags: ['console.command']
