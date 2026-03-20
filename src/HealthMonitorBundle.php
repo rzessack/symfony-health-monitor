@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rzessack\HealthMonitor;
 
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class HealthMonitorBundle extends AbstractBundle
+class HealthMonitorBundle extends Bundle
 {
 }
