@@ -7,9 +7,14 @@ services:
 
     Rzessack\HealthMonitor\Service\SystemHealthService:
         arguments:
-            $redisUrl: '%env(string:REDIS_URL)%'
+            $redisUrl: '%env(default::string:REDIS_URL)%'
 
-    Rzessack\HealthMonitor\Repository\SystemHealthSnapshotRepository: ~
+    Rzessack\HealthMonitor\Repository\SystemHealthSnapshotRepository:
+        arguments:
+            $timezone: '%health_monitor.timezone%'
 
     Rzessack\HealthMonitor\Command\CollectHealthSnapshotCommand:
+        arguments:
+            $timezone: '%health_monitor.timezone%'
+            $retentionDays: '%health_monitor.retention_days%'
         tags: ['console.command']

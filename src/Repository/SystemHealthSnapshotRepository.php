@@ -17,9 +17,14 @@ use function in_array;
  */
 class SystemHealthSnapshotRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    private readonly DateTimeZone $tz;
+
+    public function __construct(
+        ManagerRegistry $registry,
+        string $timezone = 'UTC',
+    ) {
         parent::__construct($registry, SystemHealthSnapshot::class);
+        $this->tz = new DateTimeZone($timezone);
     }
 
     /**
@@ -27,8 +32,7 @@ class SystemHealthSnapshotRepository extends ServiceEntityRepository
      */
     public function findAggregated(): array
     {
-        $tz = new DateTimeZone('Europe/Berlin');
-        $now = new DateTimeImmutable('now', $tz);
+        $now = new DateTimeImmutable('now', $this->tz);
 
         $buckets = [
             [0, 1, 5],

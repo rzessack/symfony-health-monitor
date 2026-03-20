@@ -30,6 +30,8 @@ class CollectHealthSnapshotCommand extends Command
         private readonly SystemHealthSnapshotRepository $snapshotRepo,
         private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $logger,
+        private readonly string $timezone = 'UTC',
+        private readonly int $retentionDays = 7,
     ) {
         parent::__construct();
     }
@@ -63,6 +65,7 @@ class CollectHealthSnapshotCommand extends Command
             diskTotalGb: $disk['total_gb'] ?? 0.0,
             dbResponseMs: $dbMs,
             redisAvailable: $redisOk,
+            timezone: $this->timezone,
         );
 
         $this->em->persist($snapshot);
@@ -124,8 +127,8 @@ class CollectHealthSnapshotCommand extends Command
     private function cleanup(): int
     {
         $before = new DateTimeImmutable(
-            '-7 days',
-            new DateTimeZone('Europe/Berlin'),
+            sprintf('-%d days', $this->retentionDays),
+            new DateTimeZone($this->timezone),
         );
 
         return $this->snapshotRepo->deleteOlderThan($before);

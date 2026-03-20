@@ -71,6 +71,7 @@ class SystemHealthSnapshot
         float $diskTotalGb = 0.0,
         ?float $dbResponseMs = null,
         ?bool $redisAvailable = null,
+        string $timezone = 'UTC',
     ) {
         $this->cpuUsagePct = $cpuUsagePct;
         $this->ramUsagePct = $ramUsagePct;
@@ -86,7 +87,7 @@ class SystemHealthSnapshot
         $this->redisAvailable = $redisAvailable;
         $this->recordedAt = new DateTimeImmutable(
             'now',
-            new DateTimeZone('Europe/Berlin'),
+            new DateTimeZone($timezone),
         );
     }
 

@@ -28,7 +28,17 @@ return [
 ];
 ```
 
-### 2. Set the Redis URL
+### 2. Bundle configuration (optional)
+
+Create `config/packages/health_monitor.yaml`:
+
+```yaml
+health_monitor:
+    timezone: 'Europe/Berlin'  # default: UTC
+    retention_days: 14         # default: 7
+```
+
+### 3. Set the Redis URL
 
 Add the `REDIS_URL` environment variable to your `.env` file:
 
@@ -36,13 +46,9 @@ Add the `REDIS_URL` environment variable to your `.env` file:
 REDIS_URL=redis://localhost:6379
 ```
 
-If you do not use Redis, set it to an empty string:
+If you do not use Redis, leave it unset or set it to an empty string — the bundle handles both gracefully.
 
-```dotenv
-REDIS_URL=
-```
-
-### 3. Create the database table
+### 4. Create the database table
 
 ```bash
 php bin/console doctrine:schema:update --force
@@ -55,7 +61,7 @@ php bin/console doctrine:migrations:diff
 php bin/console doctrine:migrations:migrate
 ```
 
-### 4. Configure Doctrine entity mapping
+### 5. Configure Doctrine entity mapping
 
 Ensure the bundle entities are picked up by Doctrine. Add to your `config/packages/doctrine.yaml`:
 
@@ -71,13 +77,15 @@ doctrine:
                 alias: HealthMonitor
 ```
 
-### 5. Schedule snapshot collection
+### 6. Schedule snapshot collection
 
 Add a cron job that runs every 5 minutes:
 
 ```
 */5 * * * * php /path/to/your/project/bin/console health-monitor:collect
 ```
+
+Or use Symfony Scheduler for in-process scheduling.
 
 ## Usage
 
@@ -89,7 +97,7 @@ Collect a single snapshot manually:
 php bin/console health-monitor:collect
 ```
 
-The command automatically cleans up snapshots older than 7 days.
+The command automatically cleans up snapshots older than the configured retention period.
 
 ### Integration in an admin controller
 
@@ -130,6 +138,25 @@ The `findAggregated()` method returns time-bucketed data suitable for Chart.js o
 - 3-4 days ago: 1-hour averages
 - 4-5 days ago: 2-hour averages
 - 5-7 days ago: 4-hour averages
+
+### Docker support
+
+The bundle automatically detects Docker environments by looking for `/host/proc/*` paths. Mount the host's `/proc` filesystem into your container:
+
+```yaml
+# docker-compose.yaml
+services:
+    app:
+        volumes:
+            - /proc:/host/proc:ro
+```
+
+## Testing
+
+```bash
+composer install
+vendor/bin/phpunit
+```
 
 ## License
 
