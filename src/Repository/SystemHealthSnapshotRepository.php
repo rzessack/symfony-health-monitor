@@ -154,7 +154,7 @@ class SystemHealthSnapshotRepository extends ServiceEntityRepository
                 FROM system_health_snapshots
                 WHERE recorded_at >= :from AND recorded_at <= :to
                 GROUP BY FLOOR(EXTRACT(EPOCH FROM recorded_at) / :interval)
-                ORDER BY recorded_at ASC';
+                ORDER BY 1 ASC';
 
         $rows = $conn->fetchAllAssociative($sql, [
             'interval' => $interval,
